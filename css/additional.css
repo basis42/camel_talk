@@ -8,6 +8,24 @@
     background-position-y: center;
 }
 
+.reveal section img.camellogo {
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: 339px;
+    vertical-align: middle;
+    margin-bottom: -15px;
+}
+
+.reveal section img.gujlogo {
+    background: none;
+    border: none;
+    box-shadow: none;
+    width: 70px;
+    vertical-align: middle;
+    margin-bottom: 18px;
+}
+
 .eipbook {
     float: left;
 }
@@ -26,8 +44,16 @@
     color: #17ff2e;
 }
 
+.reveal .spaced .highlight-lila{
+    color: #AF6AC1;
+}
+
 .highlight-green-inline{
     color: #17ff2e;
+}
+
+.highlight-lila-inline{
+    color: #AF6AC1;
 }
 
 .reveal section img.noborder{
@@ -49,6 +75,11 @@
     font-size: 0.3em;
 }
 
+.reveal .copyLogo {
+    font-size: 0.2em;
+    float: left;
+
+}
 .reveal .tiny.posabs {
     position: relative;
     top: -50px;
