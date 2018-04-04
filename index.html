@@ -1,0 +1,303 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Enterprise Application Integration mit Apache Camel - Mario Rutz</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/league.css">
+		<link rel="stylesheet" href="css/additional.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<div class="logo"></div>
+					<div class="title">
+						<small>Enterprise Application Integration mit</small>
+						<h1>Apache Camel</h1>
+						<h4>22.02.2018</h4>
+						<h4><a href="emailto:rutz.mario@guj.de">rutz.mario@guj.de</a> --- <a href="http://twitter.com/basis42" target="_new" class="roll"><span data-title="@basis42">@basis42</span></a></h4>
+						<span class="tiny">Camel Logo - <a href="https://github.com/fi-">https://github.com/fi-</a></span>
+					</div>
+
+				</section>
+				<section>
+					<h2>Über mich</h2>
+					<ul>
+						<li class="fragment">Application Architect - Gruner + Jahr DVS</li>
+						<li class="fragment">Java / PHP</li>
+						<li class="fragment">Javascript / CSS</li>
+						<li class="fragment">MOS 6502 Assembler</li>
+						<li class="fragment">...</li>
+					</ul>
+					<aside class="notes">
+						Mos, Wer außer Sven weiß es?<br>
+						Kann alles ein bisschen, aber nichts richtig. Das nennt man heute wohl Fullstack-Developer.
+					</aside>
+				</section>
+				<section>
+					<h2>Agenda</h2>
+					<ul>
+						<li class="fragment">Motivation</li>
+						<li class="fragment">Enterprise Application Integration</li>
+						<li class="fragment">Apache Camel</li>
+						<li class="fragment">Real-life Beispiel</li>
+						<li class="fragment">Lessons learned</li>
+						<li class="fragment">Ausblick</li>
+					</ul>
+					<aside class="notes">
+						<ul>
+							<li>Deutlich machen das der Weg aufgezeigt wird.</li>
+							<li>Also kleines Highlight dürft ihr nachher mit euren Smartphones spielen, es gibt eine Mitmachaufgabe</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>Motivation</h2>
+					<small>Wie sind wir aufs Kamel gekommen?</small>
+					<p class="fragment">Anbindung eines weiteren CRM Systems an ein Magento-basiertes Online-Shopsystem</p>
+					<aside class="notes">
+						<ul>
+							<li>Magento ist in PHP.</li>
+						<li>Bis zu dem Zeitpunkt KIMBA als einziges CRM. Wem sagt KIMBA nichts? Webshop nur Frontend. Produkte
+							bzw. Aktionen als auch Orderabwicklung KIMBA führend.</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h3>Naiver Ansatz</h3>
+					<small>Das machen wir so wie immer!</small>
+					<p class="fragment">Das bestehende CRM als Blueprint</p>
+					<aside class="notes">
+						Bestehende macht schon vieles richtig, primitives Queueing, Fehlertoleranz, Retry Logik etc.
+						Wohlfühlzone
+					</aside>
+				</section>
+				<section>
+					<h3>Vorgehen hinterfragt</h3>
+					<small>Das kann man meist besser machen!</small>
+					<p class="fragment">(Micro) Services vs. Monolith?</p>
+					<p class="fragment">PHP?</p>
+					<p class="fragment">Best Practices / Tools?</p>
+					<aside class="notes">
+						<ul>
+							<li>Alles in einem Shop Monolithen ist keine gute Idee</li>
+							<li>PHP ist für Integration keine gute Wahl</li>
+							<li>Wir bewegen uns hier in einem Bereich der Informatik der 1000fach gelöst ist.</li>
+							<li>Der beste Code ist der den man nicht geschieben hat(3 feste Devs, 35.. Shops)</li>
+							<li>Software Engineeering best practises</li>
+					</aside>
+				</section>
+				<section>
+					<h2>Enterprise Application Integration</h2>
+					<small>Integration ist nichts neues!</small>
+					<blockquote class="fragment" cite="https://www.techopedia.com/definition/1506/enterprise-application-integration-eai">"Enterprise application integration (EAI) is the use of technologies and services across an enterprise to enable the integration of software applications and hardware systems."</blockquote>
+					<aside class="notes">
+						Frage: Wer hat den Begriff Enterprise Application Integration schon mal gehört?
+						Frage: Wer hat den schon mal den Begriff Enterprise Service Bus gehört?
+						ESB ist eine EAI Umsetzung
+					</aside>
+				</section>
+				<section>
+					<h3>Enterprise Integration Patterns</h3>
+					<small>Muster erkennen und anwenden</small><br/>
+					<div class="eipbook"><a href="http://www.enterpriseintegrationpatterns.com/patterns/messaging/" target="_new"><img height="370" src="image/eipbook.png"></a></div>
+					<div>
+						<p>"Integrationsbibel" von Gregor Hohpe and Bobby Woolf</p>
+						<p>dokumentieren 65 Integrationspattern</p>
+						<p><a href="http://www.enterpriseintegrationpatterns.com">http://www.enterpriseintegrationpatterns.com</a></p>
+					</div>
+				</section>
+				<section>
+					<h3>Enterprise Integration Patterns</h3>
+					<small>Beispiel</small>
+					<p>Onix File in einzelne Produkte aufteilen<img src="image/patterns_in_action.png"></p>
+					<aside class="notes">
+                        ONIX steht für ONline Information eXchange und ist ein Datenformat zum Austausch von bibliografischen und Produkt-Daten über die gesamte Verwertungskette im Buchhandel.
+                        Notation definiert
+						draw.io hat z.B. EIP Shapes
+					</aside>
+				</section>
+				<section>
+					<h3>Integrationslösungen</h3>
+					<small>Welche haben wir betrachtet?</small><br/>
+					<ul class="fragment"><li>Mule von MuleSoft</li><ul><li>quasi ein kommerzielles Produkt</li></ul></ul>
+					<ul class="fragment"><li>Spring Integration</li><ul><li>Open Source Apache 2.0 Licence</li></ul></ul>
+					<ul class="fragment"><li>Apache Camel</li><ul><li>Open Source Apache 2.0 Licence</li></ul></ul>
+					<aside class="notes">
+						<ul>
+							<li>Weg: Unterstützung durch formalisierten EAM Prozess: Architecture Review Board, Abgleich mit vorhandenen Systemen, Verteidigung, Input</li>
+							<li>Stückweit nicht agil, Input aber wertvoll</li>
+							<li>ESB bewusst raus, wg. formalem Overhead</li>
+						</ul>
+					</aside>
+				</section>
+				<section>
+					<h2>Apache Camel</h2>
+					<small>And the winner is ...</small>
+					<ul>
+						<li>Erster commit vor knapp 11 Jahren(Mai 2007)</li>
+						<li>Version 1.0 Code läuft unverändert auf aktuellem Release 2.20.2</li>
+						<li>Apache Camel implementiert die meisten EIPs</li>
+						<li>4 DSLs für Routen(Java, XML, Scala, Goovy)</li>
+					</ul>
+					<aside class="notes">
+						Große Verbreitung, aktive Community, viele Integrationen, auch Basis für Mule und Jboss FUSE
+					</aside>
+				</section>
+				<section>
+					<section>
+						<h3>Architektur</h3>
+						<small>Blick aus der Vogelperspektive</small>
+					</section>
+					<section>
+						<img  class="noborder" src="image/architecture.png">
+
+					</section>
+					<aside class="notes">
+
+					</aside>
+				</section>
+				<section>
+					<section>
+						<h3>Components</h3>
+						<p>Über 200 Components / Integrations</p>
+					</section>
+					<section data-transition="fade-out">
+						<p class="spaced">AHC AHC-WS AMQP APNS Atmosphere-Websocket Atom Avro AWS-CW AWS-DDB AWS-DDBSTREAM AWS-EC2 AWS-SDB AWS-SES AWS-SNS AWS-SQS AWS-SWF AWS-S3 Bean Beanstalk Bean Validator Box BraintreeBrowse Cache Cassandra Class Chronicle Engine Chunk CMIS Cometd Consul Context ControlBus CouchDB Crypto (Digital Signatures) CXF CXF Bean CXFRS DataFormat DataSet Direct Direct-VM DNS Disruptor Docker Dozer Dropbox EJB Ehcache ElasticSearch Etcd Spring Event EventAdmin Exec Facebook File Flatpack Flink FOP FreeMarker FTP FTPS Ganglia Gauth GHttp Git Github Glogin Gtask Google Calendar Google Drive Google Mail Gmail Gora Grape Geocoder Google Guava EventBus Hazelcast Hbase HDFS HDFS2 Hipchat HL7 Infinispan HTTP HTTP4 iBATIS Ignite IMAP IMAPS IRC IronMQ JavaSpace jBPM jcache jcloudsJCR JDBC Jetty Jgroups JIRA JMS JMX JPA JOLT Jsch JT/400 Kafka Kestrel Krati Kubernetes Kura Language LDAP LinkedIn Log Lucene Lumberjack Metrics MINA MINA2 Mock MLLP MongoDB MongoDB GridFS MQTT MSV Mustache MVEL MyBatis Nagios NATS Netty Netty4 Netty HTTP Netty4 HTTP Olingo2 Openshift OptaPlanner Paho Pax-Logging PDF POP3 POP3S PrinterProperties Quartz Quartz2 Quickfix RabbitMQ Ref Rest Restlet REST Swagger RMI RNC RNG Routebox RSS Salesforce SAP NetWeaver Scheduler schematron SEDA ServiceNow SERVLET SFTP Sip SIPS SJMS SJMS Batch Slack SMTP SMPP SMPPS SNMP Solr Apache Spark Spark-rest Splunk SpringBatch SpringIntegration Spring LDAP Spring Redis Spring Web Services SQL SQL Stored Procedure SSH component StAX Stream Stomp StringTemplate Stub Telegram Test Timer Twitter Undertow Validation Velocity Vertx VM Weather Websocket XML Security XMPP Xquery XSLT Yammer Zookeeper</p>
+					</section>
+					<section data-transition="fade-in">
+						<p class="spaced">AHC AHC-WS AMQP APNS Atmosphere-Websocket Atom Avro AWS-CW AWS-DDB AWS-DDBSTREAM AWS-EC2 AWS-SDB AWS-SES AWS-SNS <span class="highlight-green">AWS-SQS</span> AWS-SWF <span class="highlight-green">AWS-S3</span> Bean Beanstalk Bean Validator Box BraintreeBrowse Cache Cassandra Class Chronicle Engine Chunk CMIS Cometd Consul Context ControlBus CouchDB <span class="highlight-green">Crypto (Digital Signatures)</span> <span class="highlight-green">CXF</span> CXF Bean CXFRS <span class="highlight-green">DataFormat</span> DataSet <span class="highlight-green">Direct</span> Direct-VM DNS Disruptor Docker Dozer Dropbox EJB Ehcache ElasticSearch Etcd Spring Event EventAdmin Exec Facebook File Flatpack Flink FOP FreeMarker FTP <span class="highlight-green">FTPS</span> Ganglia Gauth GHttp Git Github Glogin Gtask Google Calendar Google Drive Google Mail Gmail Gora Grape Geocoder Google Guava EventBus Hazelcast Hbase HDFS HDFS2 Hipchat HL7 Infinispan <span class="highlight-green">HTTP</span> HTTP4 iBATIS Ignite IMAP IMAPS IRC IronMQ JavaSpace jBPM jcache jcloudsJCR JDBC Jetty Jgroups JIRA JMS JMX JPA JOLT Jsch JT/400 Kafka Kestrel Krati Kubernetes Kura Language LDAP LinkedIn Log Lucene Lumberjack Metrics MINA MINA2 <span class="highlight-green">Mock</span> MLLP MongoDB MongoDB GridFS MQTT MSV <span class="highlight-green">Mustache</span> MVEL MyBatis Nagios NATS Netty Netty4 Netty HTTP Netty4 HTTP Olingo2 Openshift OptaPlanner Paho Pax-Logging PDF POP3 POP3S PrinterProperties Quartz <span class="highlight-green">Quartz2</span> Quickfix RabbitMQ Ref <span class="highlight-green">Rest</span> Restlet REST Swagger RMI RNC RNG Routebox RSS Salesforce SAP NetWeaver Scheduler schematron SEDA ServiceNow SERVLET SFTP Sip SIPS SJMS SJMS Batch Slack <span class="highlight-green">SMTP</span> SMPP SMPPS SNMP Solr Apache Spark Spark-rest Splunk SpringBatch SpringIntegration Spring LDAP Spring Redis Spring Web Services <span class="highlight-green">SQL</span> SQL Stored Procedure SSH component StAX Stream Stomp StringTemplate Stub Telegram Test Timer <span class="highlight-green">Twitter</span> Undertow Validation Velocity Vertx VM Weather Websocket XML Security XMPP Xquery <span class="highlight-green">XSLT</span> Yammer Zookeeper</p>
+					</section>
+					<section>
+						<h3>Ein kleines Beispiel</h3>
+						<small>Achtung: Mitmach-Aufgabe :-)</small>
+						<p>Finde Twitter Tweets mit dem Hashtag <span class="highlight-green-inline">#gujtechtalk</span>
+							und generiere mit dem neuesten Tweet eine HTML Seite die via Amazon-S3 CDN ausgeliefert wird.</p>
+					</section>
+				</section>
+				<section>
+					<iframe width="100%" height="300px" data-src="https://s3-eu-west-1.amazonaws.com/rutz2-camel-talk/latest_tweet.html"></iframe>
+					<aside class="notes">
+						Nach Code: Läuft auch in Amazon Lambda und es gibt eine Slack Integration -> vgl. Talk von Felix letzte Woche
+					</aside>
+				</section>
+				<section>
+					<h3>Apache Camel als Framework</h3>
+					<small>Auch einzelne Funktionen können hilfreich sein</small>
+					<pre><code data-trim data-noescape>
+						ProducerTemplate template = exchange.getContext().createProducerTemplate();
+
+						// you can cast the response directly
+						String ret = template.requestBody("<hello/>", String.class);
+
+						// or specify the endpoint directly
+						String ret = template.requestBody("aws-s3://rutz2-camel-talk?accessKey=...", "...", String.class);
+					</code></pre>
+					<aside class="notes">
+						Apache Camel Routing eher nicht geeignet für syncrone, Zeit-kritische Prozesse
+					</aside>
+				</section>
+				<section>
+					<h3>Error Handling</h3>
+					<small>Anything that can go wrong will go wrong</small>
+					<p>
+					<ul>
+						<li class="fragment">Retry by default</li>
+						<li class="fragment">Custom Redrive-Policies</li>
+						<li class="fragment">Hystrix Integration</li>
+					</ul>
+					</p>
+					<aside class="notes">
+						Exception ist kein harter Fehler, z.B. RemoteException
+					</aside>
+				</section>
+				<section>
+					<section>
+						<h2>Real-Life Beispiel</h2>
+						<small>So einfach ist es dann doch nicht</small>
+						<p><img width="450px" src="image/egmont.png"></p>
+						<p>Produktimport für <a target="_new" href="https://www.egmont-shop.de">https://www.egmont-shop.de</a></p>
+					</section>
+					<section>
+						<img src="image/product_import.png">
+					</section>
+				</section>
+				<section>
+					<h2>Lessons learned</h2>
+					<ul>
+						<li class="fragment">syncrone, zeitkritische Prozesse sind problematisch</li>
+						<li class="fragment">Business Logic außerhalb Camel</li>
+						<li class="fragment">EASI als Gesamtsystem wächst schnell</li>
+						<li class="fragment">Modularisierung wird schnell zum Thema</li>
+						<li class="fragment">XML DSL ist problematisch</li>
+						<li class="fragment">Message Tracing via Greylog nicht immer einfach</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Ausblick</h2>
+					<ul>
+						<li class="fragment">Unabhängig deploybare Module</li>
+						<li class="fragment">Horizontale Skalierbarkeit</li>
+						<li class="fragment">Kubernetes Cluster</li>
+						<li class="fragment">Message Tracing</li>
+					</ul>
+					<aside class="notes">
+						Integration as a Service!
+					</aside>
+				</section>
+				<section>
+					<img height="450px" class="noborder" src="image/questions.svg">
+				</section>
+				<section>
+					<h1>Dankeschön!</h1>
+					<h4><a href="emailto:rutz.mario@guj.de">rutz.mario@guj.de</a> --- <a href="http://twitter.com/basis42" target="_new" class="roll"><span data-title="@basis42">@basis42</span></a> --- <a href="https://www.basis42.de" target="_new" class="roll"><span data-title="http://www.basis42.de">www.basis42.de</span></a></h4>
+
+					<small></small>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				]
+			})
+
+            window.addEventListener("mousedown", handleClick, false);
+            window.addEventListener("contextmenu", function(e) { e.preventDefault(); }, false);
+
+            function handleClick(e) {
+                e.preventDefault();
+                if(e.button === 0) Reveal.prev();
+                if(e.button === 2) Reveal.next();
+            }
+
+		</script>
+	</body>
+</html>

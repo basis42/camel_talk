@@ -1,0 +1,55 @@
+.logo {
+    background-image: url('../image/apachecamel-alone-nomargins.png');
+    background-size: 340px auto;
+    background-repeat: no-repeat;
+    width: 340px;
+    float: left;
+    height: 337px;
+    background-position-y: center;
+}
+
+.eipbook {
+    float: left;
+}
+
+.title{
+    float: right;
+}
+
+.reveal .spaced{
+    word-spacing: 30px;
+    font-size: 0.5em;
+    line-height: 1.2em;
+}
+
+.reveal .spaced .highlight-green{
+    color: #17ff2e;
+}
+
+.highlight-green-inline{
+    color: #17ff2e;
+}
+
+.reveal section img.noborder{
+    background: none;
+    border:none;
+    box-shadow: none;
+}
+
+.reveal pre code {
+    font-size: 0.67em;
+    line-height: 1.2;
+}
+
+.reveal pre {
+    width: 100%;
+}
+
+.reveal .tiny {
+    font-size: 0.3em;
+}
+
+.reveal .tiny.posabs {
+    position: relative;
+    top: -50px;
+}
