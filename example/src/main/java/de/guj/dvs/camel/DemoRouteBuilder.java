@@ -8,7 +8,7 @@ public class DemoRouteBuilder extends RouteBuilder {
 
     public void configure() {
 
-        String hashtag = "wurstww";
+        String hashtag = "tchh18";
         String TWITTER_STREAM_API_ENDPOINT
                 = String.format("twitter-streaming:filter?keywords=%s&type=event&delay=600000&count=100&consumerKey=%s&consumerSecret=%s&accessToken=%s&accessTokenSecret=%s", hashtag, Props.TW_CK, Props.TW_CS, Props.TW_AT, Props.TW_ATS);
         String S3_ENDPOINT
