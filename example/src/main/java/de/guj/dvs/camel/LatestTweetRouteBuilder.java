@@ -28,8 +28,8 @@ public class LatestTweetRouteBuilder extends RouteBuilder {
 
             .to("mustache:latestTweet.mustache")
 
-            .setHeader("CamelAwsS3Key", simple("latest_tweet.html"))
-            .setHeader("CamelAwsS3ContentType", simple("text/html"))
+            .setHeader("CamelAwsS3Key", constant("latest_tweet.html"))
+            .setHeader("CamelAwsS3ContentType", constant("text/html"))
             .to(S3_ENDPOINT);
     }
 
