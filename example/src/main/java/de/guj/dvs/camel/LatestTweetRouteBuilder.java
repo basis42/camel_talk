@@ -4,22 +4,23 @@ import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
 import twitter4j.Status;
 
-public class DemoRouteBuilder extends RouteBuilder {
+public class LatestTweetRouteBuilder extends RouteBuilder {
 
     public void configure() {
 
-        String hashtag = "tchh18";
+        final String HASHTAG = "SWKLübeck";
         String TWITTER_STREAM_API_ENDPOINT
-                = String.format("twitter-streaming:filter?keywords=%s&type=event&delay=600000&count=100&consumerKey=%s&consumerSecret=%s&accessToken=%s&accessTokenSecret=%s", hashtag, Props.TW_CK, Props.TW_CS, Props.TW_AT, Props.TW_ATS);
+                = String.format("twitter-streaming:filter?keywords=%s&type=event&delay=600000&count=100&consumerKey=%s&consumerSecret=%s&accessToken=%s&accessTokenSecret=%s", HASHTAG, Props.TW_CK, Props.TW_CS, Props.TW_AT, Props.TW_ATS);
         String S3_ENDPOINT
                 = String.format("aws-s3://rutz2-camel-talk?accessKey=%s&secretKey=%s", Props.AWS_AK, Props.AWS_SK);
 
         from(TWITTER_STREAM_API_ENDPOINT)
+            .log("Received message containing hashtag " + HASHTAG)
             .process(exchange -> {
                 Message message = exchange.getIn();
                 Status status =  message.getBody(Status.class);
                 message.setHeader("user", status.getUser().getName());
-                message.setHeader("hashtag", hashtag);
+                message.setHeader("hashtag", HASHTAG);
                 message.setHeader("date", status.getCreatedAt());
                 message.setHeader("img", status.getUser().getMiniProfileImageURLHttps());
                 message.setBody(status.getText());

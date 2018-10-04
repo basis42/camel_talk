@@ -1,5 +1,5 @@
 .logo {
-    background-image: url('../image/apachecamel-alone-nomargins.png');
+    background-image: url('../image/camel_logo.png');
     background-size: 340px auto;
     background-repeat: no-repeat;
     width: 340px;
@@ -45,7 +45,7 @@
 }
 
 .reveal .spaced .highlight-lila{
-    color: #AF6AC1;
+    color: #2ca737;
 }
 
 .highlight-green-inline{
@@ -53,7 +53,7 @@
 }
 
 .highlight-lila-inline{
-    color: #AF6AC1;
+    color: #2ca737;
 }
 
 .reveal section img.noborder{

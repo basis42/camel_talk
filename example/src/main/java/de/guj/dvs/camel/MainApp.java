@@ -12,7 +12,7 @@ public class MainApp {
      */
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        main.addRouteBuilder(new DemoRouteBuilder());
+        main.addRouteBuilder(new LatestTweetRouteBuilder());
         main.run(args);
     }
 
