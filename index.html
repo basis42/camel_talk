@@ -30,7 +30,7 @@
 					<div class="title">
 						<small>Enterprise Application Integration mit</small>
 						<h1>Apache Camel</h1>
-						<h5>04.10.2018 --- Softwerkskammer Lübeck</h5>
+						<h5>08.10.2018 --- JCON 2018 --- Düsseldorf</h5>
 						<h5><a href="emailto:rutz.mario@guj.de">Mario Rutz</a> / <a href="https://twitter.com/basis42" traget="_blank">@basis42</a> / <a href="https://www.guj.de/"><img class="gujlogo" src="image/Gruner+Jahr-Logo.svg.png"></a></h5>
 					</div>
 				</section>
@@ -41,7 +41,6 @@
 						<li class="fragment">Java / PHP / Javascript</li>
 						<li class="fragment">CSS unter Schmerzen</li>
 						<li class="fragment">MOS 6502 Assembler</li>
-						<li class="fragment">...</li>
 					</ul>
 					<aside class="notes">
 						Mos, Wer weiß es?<br>
@@ -187,30 +186,14 @@
 					<section>
 						<h3>Ein kleines Beispiel</h3>
 						<small>Achtung: Mitmach-Aufgabe :-)</small>
-						<p>Finde Twitter Tweets mit dem Hashtag <span class="highlight-lila-inline">#swklübeck</span>
-							und generiere mit dem neuesten Tweet eine HTML Seite die via Amazon-S3 CDN ausgeliefert    wird.</p>
+						<p>Finde Twitter Tweets mit dem Hashtag <span class="highlight-lila-inline">#jconcamel</span>
+							und generiere mit dem neuesten Tweet eine HTML Seite die via Amazon-S3 CDN ausgeliefert wird.</p>
 					</section>
 				</section>
 				<section>
 					<iframe width="100%" height="300px" data-src="https://s3-eu-west-1.amazonaws.com/rutz2-camel-talk/latest_tweet.html"></iframe>
 					<aside class="notes">
 						Nach Code: Läuft auch in Amazon Lambda und es gibt eine Slack Integration -> vgl. Talk von Felix letzte Woche
-					</aside>
-				</section>
-				<section>
-					<h3>Apache Camel als Framework</h3>
-					<small>Auch einzelne Funktionen können hilfreich sein</small>
-					<pre><code data-trim data-noescape>
-						ProducerTemplate template = exchange.getContext().createProducerTemplate();
-
-						// you can cast the response directly
-						String ret = template.requestBody("&lt;hello/&gt;", String.class);
-
-						// or specify the endpoint directly
-						String ret = template.requestBody("aws-s3://bucketname?accessKey=...", "...", String.class);
-					</code></pre>
-					<aside class="notes">
-						Apache Camel Routing eher nicht geeignet für syncrone, Zeit-kritische Prozesse
 					</aside>
 				</section>
 				<section>
@@ -243,22 +226,21 @@
 					<ul>
 						<li class="fragment">syncrone, zeitkritische Prozesse sind problematisch</li>
 						<li class="fragment">Business Logik in Services außerhalb EAI</li>
-						<li class="fragment">Gesamtsystem wächst schnell</li>
 						<li class="fragment">Modularisierung wird schnell zum Thema</li>
 						<li class="fragment">XML DSL ist nur anfangs sexy</li>
-						<li class="fragment">Message Tracing via Greylog nicht immer einfach</li>
+						<li class="fragment">Debugging via klassisches Logging nicht immer einfach</li>
 					</ul>
 				</section>
 				<section>
 					<h2>Takeaways</h2>
 					<ul>
-						<li class="fragment">Most important: Integration kann Spass machen</li>
-						<li class="fragment">Don't re-invent the wheel</li>
+						<li class="fragment">Zuallererst: Integration kann Spass machen</li>
+						<li class="fragment">Es gilt, wie so oft: Don't re-invent the wheel</li>
 					</ul>
 					<aside class="notes">
 						<ul>
 							<li>Schnelle Erfolge auch für Java Beginner.</li>
-							<li>Es gibt keinen Grund für  eigen Implemtierung</li>
+							<li>Es gibt keinen Grund für eigen-Implemtierung</li>
 						</ul>
 					</aside>
 				</section>

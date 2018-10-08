@@ -8,7 +8,7 @@ public class LatestTweetRouteBuilder extends RouteBuilder {
 
     public void configure() {
 
-        final String HASHTAG = "SWKLübeck";
+        final String HASHTAG = "jconcamel";
         String TWITTER_STREAM_API_ENDPOINT
                 = String.format("twitter-streaming:filter?keywords=%s&type=event&delay=600000&count=100&consumerKey=%s&consumerSecret=%s&accessToken=%s&accessTokenSecret=%s", HASHTAG, Props.TW_CK, Props.TW_CS, Props.TW_AT, Props.TW_ATS);
         String S3_ENDPOINT
