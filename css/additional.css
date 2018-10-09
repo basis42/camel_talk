@@ -8,6 +8,17 @@
     background-position-y: center;
 }
 
+.jcon {
+    position: fixed;
+    left: 220px;
+    top: 383px;
+    background-image: url("../image/jcon-icon.png");
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: 14%;
+}
+
 .reveal section img.camellogo {
     background: none;
     border: none;
