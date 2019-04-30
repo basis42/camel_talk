@@ -27,7 +27,7 @@ public class LatestTweetRouteBuilder extends RouteBuilder {
         );
 
         from(TWITTER_STREAM_API_ENDPOINT)
-            .log("Received message containing hashtag " + HASHTAG)
+            .log("Received message from user '${bodyAs(twitter4j.Status).user.name}' containing hashtag #" + HASHTAG)
             .process(exchange -> {
                 Message message = exchange.getIn();
                 Status status =  message.getBody(Status.class);
